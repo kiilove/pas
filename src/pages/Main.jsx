@@ -1,10 +1,12 @@
 import { Layout } from "antd";
 import React, { useState, useEffect } from "react";
+import MainHeader from "../components/MainHeader";
 
 const { Header, Content, Footer } = Layout;
 
-const Main = () => {
+const Main = ({ children }) => {
   const [scrolling, setScrolling] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   // 스크롤이 될때 애니메이션 구동을 위한 useEffect
   // useEffect(() => {
@@ -24,12 +26,13 @@ const Main = () => {
 
     const handleScroll = () => {
       setScrolling(true); // 스크롤 중인 상태로 설정
+      setScrollY(window.scrollY);
 
       // 일정 시간 동안 스크롤 이벤트가 발생하지 않으면 스크롤이 멈춘 것으로 판단
       clearTimeout(isScrollingTimeout);
       isScrollingTimeout = setTimeout(() => {
         setScrolling(false); // 스크롤이 멈춘 상태로 설정
-      }, 600); // 여기서 300은 스크롤이 멈췄다고 판단할 시간(밀리초)을 나타냅니다.
+      }, 600); // 여기서 600은 스크롤이 멈췄다고 판단할 시간(밀리초)을 나타냅니다.
     };
 
     // 스크롤 이벤트 핸들러를 추가합니다.
@@ -43,6 +46,7 @@ const Main = () => {
 
   useEffect(() => {
     console.log(scrolling);
+    console.log(scrollY);
   }, [scrolling]);
 
   const handleScroll = () => {
@@ -55,10 +59,7 @@ const Main = () => {
   };
 
   return (
-    <div
-      className="flex w-full h-full justify-center items-start "
-      style={{ maxWidth: "1000px", minHeight: "100vh" }}
-    >
+    <div style={{ maxWidth: "1000px", minHeight: "100vh", width: "100%" }}>
       <Layout>
         {/* <Header className="bg-white px-0 h-auto">
           <div className="flex w-full flex-col h-full justify-start items-start">
@@ -75,15 +76,12 @@ const Main = () => {
             </div>
           </div>
         </Header> */}
-        <Header
-          className={
-            scrolling ? "h-0" : "bg-white border-b h-10 fixed px-0 w-full"
-          }
-          style={{ maxWidth: "1000px" }}
-        >
-          헤더
+        <Header className="bg-white">
+          <MainHeader />
         </Header>
-        <Content className="bg-white" style={{ height: "2500px" }}></Content>
+        <Content className="bg-white h-auto" style={{ minHeight: "600px" }}>
+          {children}
+        </Content>
         <Footer>footer</Footer>
       </Layout>
     </div>
