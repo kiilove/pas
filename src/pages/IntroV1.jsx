@@ -1,32 +1,24 @@
 import React from "react";
 import ContactIcon from "../img/contact_icon.png";
-import ReviewBanner from "../img/review_event.png";
 import { Avatar, Carousel, Space } from "antd";
 import MainCarousel from "../components/MainCarousel";
-import MainBestItems from "../components/MainBestItems";
-
-import MainCategoryItems from "../components/MainCategoryItems";
-
 const Intro = () => {
   return (
-    <div className="flex flex-col w-full h-full gap-y-0 ">
+    <div className="flex flex-col w-full h-full p-2 gap-y-2">
       <div className="flex w-full h-auto flex-col">
-        <div className="flex h-28 bg-gray-200" style={{ width: "100%" }}>
+        <div
+          className="flex  rounded-lg h-36"
+          style={{ backgroundColor: "#2fbcb6", width: "100%" }}
+        >
           <div className="flex p-5 w-full">
             <div className="flex w-full">
               <div className="flex w-3/4">
                 <div className="flex flex-col ">
-                  <span
-                    className="text-lg lg:text-2xl font-bold"
-                    style={{ fontFamily: "Noto Sans KR" }}
-                  >
-                    고객님, 반가워요
+                  <span className="text-lg lg:text-2xl font-bold font-sans">
+                    안녕하세요! 고객님
                   </span>
-                  <span
-                    className="text-gray-800 lg:text-lg font-semibold mt-5 lg:ml-5"
-                    style={{ fontFamily: "Noto Sans KR" }}
-                  >
-                    고객님만을 위한 새로운 상품을 준비했습니다.
+                  <span className="text-gray-200 lg:text-lg font-semibold font-sans mt-5 lg:ml-5">
+                    새로운 투자의 시작을 저희와 함께 해주세요.
                   </span>
                 </div>
               </div>
@@ -38,22 +30,13 @@ const Intro = () => {
                   size={100}
                 />
                 <div className="hidden lg:flex flex-col ">
-                  <span
-                    className="text-lg font-semibold "
-                    style={{ fontFamily: "Noto Sans KR" }}
-                  >
+                  <span className="text-lg font-semibold font-sans ">
                     쥴리엣
                   </span>
-                  <span
-                    className="text-base font-semibold"
-                    style={{ fontFamily: "Noto Sans KR" }}
-                  >
+                  <span className="text-base font-semibold font-sans">
                     경기 서남본부
                   </span>
-                  <span
-                    className="text-sm font-semibold"
-                    style={{ fontFamily: "Noto Sans KR" }}
-                  >
+                  <span className="text-sm font-semibold font-sans">
                     010-1234-1234
                   </span>
                 </div>
@@ -62,13 +45,15 @@ const Intro = () => {
           </div>
         </div>
       </div>
-      <div>
-        <img src={ReviewBanner} alt="" className="w-full" />
+      <div
+        style={{ height: "250px", width: "100%" }}
+        className=" rounded-lg bg-transparent"
+      >
+        <MainCarousel />
       </div>
-
       <div
         style={{ height: "60px", width: "100%", backgroundColor: "#1e948e" }}
-        className="flex justify-center items-center gap-x-5"
+        className=" rounded-lg flex justify-center items-center gap-x-5"
       >
         <span
           className="text-gray-200 lg:text-lg"
@@ -88,12 +73,6 @@ const Intro = () => {
           alt=""
           style={{ width: "30px", height: "30px" }}
         />
-      </div>
-      <div className="flex flex-col px-2 gap-y-2 mt-5">
-        <MainBestItems />
-      </div>
-      <div className="flex flex-col px-2 gap-y-2 mt-5">
-        <MainCategoryItems />
       </div>
     </div>
   );

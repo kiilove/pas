@@ -51,7 +51,7 @@ const MainCarousel = () => {
               alt=""
               key={iIdx}
               style={{ width: "100%", height: "250px" }}
-              className=" object-cover object-center rounded-lg"
+              className=" object-cover object-center"
             />
           </div>
         );
