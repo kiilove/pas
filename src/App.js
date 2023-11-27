@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Main from "./pages/Main";
 import Intro from "./pages/Intro";
 import MainCarousel from "./components/MainCarousel";
+import ItemView from "./pages/ItemView";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main children={<Intro />} />} />
           <Route path="/test" element={<MainCarousel />} />
+          <Route path="/itemview" element={<ItemView />} />
         </Routes>
       </div>
     </BrowserRouter>

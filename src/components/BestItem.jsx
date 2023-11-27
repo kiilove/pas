@@ -1,5 +1,6 @@
 import React from "react";
 import { IoChevronForwardCircle } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
@@ -38,6 +39,7 @@ const titleInlineStyle = {
 };
 
 const BestItem = ({ productType }) => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col w-full px-2">
       <div className="flex w-full justify-center flex-wrap gap-5">
@@ -46,8 +48,9 @@ const BestItem = ({ productType }) => {
 
           return (
             <div
-              className="bg-gray-200 rounded-lg flex flex-col"
+              className="bg-gray-200 rounded-lg flex flex-col hover:cursor-pointer"
               style={{ width: "180px", height: "200px" }}
+              onClick={() => navigate("/itemview")}
             >
               <div
                 className="flex w-full justify-center items-center"
