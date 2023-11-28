@@ -3,6 +3,8 @@ import Main from "./pages/Main";
 import Intro from "./pages/Intro";
 import MainCarousel from "./components/MainCarousel";
 import ItemView from "./pages/ItemView";
+import InputTelService from "./pages/InputTelService";
+import InputJoinService from "./pages/InputJoinService";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/" element={<Main children={<Intro />} />} />
           <Route path="/test" element={<MainCarousel />} />
           <Route path="/itemview" element={<ItemView />} />
+          <Route path="/telservice" element={<InputTelService />} />
+          <Route path="/joinservice" element={<InputJoinService />} />
         </Routes>
       </div>
     </BrowserRouter>
