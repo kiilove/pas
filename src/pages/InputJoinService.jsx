@@ -1,4 +1,4 @@
-import { Button, Form, Input, Radio, Space } from "antd";
+import { Button, Form, Input, Radio, Space, notification } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import UniqueIdApply from "../components/UniqueIdApply";
 import PersonalInfoApply from "../components/PersonalInfoApply";
@@ -8,46 +8,142 @@ import {
   formatPhoneNumber,
   getToday,
 } from "../functions";
+import Password from "antd/es/input/Password";
+import { useDaumPostcodePopup } from "react-daum-postcode";
+import { Timestamp } from "firebase/firestore";
+import { useFirestoreAddData } from "../hooks/useFirestore";
 
 const InputJoinService = () => {
-  const [form] = Form.useForm();
-  const inputRef = useRef();
-
   const [applyState, setApplyState] = useState({
     uniqueValue: false,
     uniqueAt: undefined,
     personalValue: false,
     personalAt: undefined,
   });
+  const [sellerId, setSellerId] = useState("jncore");
+  const [form] = Form.useForm();
+  const inputRef = useRef();
+  const firestoreAdd = useFirestoreAddData();
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (apiType, title, message, placement, duration) => {
+    api[apiType]({
+      message: title,
+      description: message,
+      placement,
+      duration,
+    });
+  };
+  const scriptUrl =
+    "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+  const open = useDaumPostcodePopup(scriptUrl);
+
+  const handleComplete = (data) => {
+    console.log(data.zonecode);
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    if (fullAddress !== "") {
+      inputRef?.current.setFieldsValue({
+        ...inputRef?.current.getFieldsValue(),
+        userZoneCode: data.zonecode,
+        userFullAddress: fullAddress,
+      });
+    }
+  };
+
+  const handleClick = () => {
+    open({ onComplete: handleComplete });
+  };
+
+  const handleAddJoin = async (data) => {
+    try {
+      await firestoreAdd.addData("userJoinService", { ...data }, (data) => {
+        openNotification(
+          "success",
+          "접수되었습니다.",
+          "곧 담당자가 연락드리겠습니다."
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onFinish = (values) => {
     //console.log(values);
     const encryptInfo = {
-      userName: encryptData(
-        inputRef?.current.getFieldsValue().userName,
-        process.env.REACT_APP_SECRET_KEY
-      ),
+      userName: encryptData(values.userName, process.env.REACT_APP_SECRET_KEY),
       userPhoneNumber: encryptData(
         inputRef?.current.getFieldsValue().userPhoneNumber,
         process.env.REACT_APP_SECRET_KEY
       ),
-    };
-
-    const decryptInfo = {
-      userName: decryptData(
-        encryptInfo.userName,
+      userJumin1: encryptData(
+        values.userJumin1,
         process.env.REACT_APP_SECRET_KEY
       ),
-      userPhoneNumber: decryptData(
-        encryptInfo.userPhoneNumber,
+      userJumin2: encryptData(
+        values.userJumin2,
+        process.env.REACT_APP_SECRET_KEY
+      ),
+      userZoneCode: encryptData(
+        values.userZoneCode,
+        process.env.REACT_APP_SECRET_KEY
+      ),
+      userFullAddress: encryptData(
+        values.userFullAddress,
+        process.env.REACT_APP_SECRET_KEY
+      ),
+      userExtraAddress: encryptData(
+        values.userExtraAddress,
         process.env.REACT_APP_SECRET_KEY
       ),
     };
-    console.log("암호화", encryptInfo);
-    console.log("복호화", decryptInfo);
-    const newInfo = { ...encryptInfo, ...applyState };
 
-    console.log(newInfo);
+    // const decryptInfo = {
+    //   userName: decryptData(
+    //     encryptInfo.userName,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    //   userPhoneNumber: decryptData(
+    //     encryptInfo.userPhoneNumber,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    //   userJumin1: decryptData(
+    //     encryptInfo.userJumin1,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    //   userJumin2: decryptData(
+    //     encryptInfo.userJumin2,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    //   userZoneCode: decryptData(
+    //     encryptInfo.userZoneCode,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    //   userFullAddress: decryptData(
+    //     encryptInfo.userFullAddress,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    //   userExtraAddress: decryptData(
+    //     encryptInfo.userExtraAddress,
+    //     process.env.REACT_APP_SECRET_KEY
+    //   ),
+    // };
+    // console.log("암호화", encryptInfo);
+    // console.log("복호화", decryptInfo);
+    const newInfo = { ...encryptInfo, ...applyState, sellerId };
+    handleAddJoin(newInfo);
   };
   const onReset = () => {
     form.resetFields();
@@ -90,12 +186,14 @@ const InputJoinService = () => {
               <Radio.Group
                 name="uniqueApply"
                 defaultValue={false}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const today = new Date();
+                  const timestampToday = Timestamp.fromDate(today);
                   handleApplys({
                     uniqueValue: e.target.value,
-                    uniqueAt: getToday(),
-                  })
-                }
+                    uniqueAt: timestampToday,
+                  });
+                }}
               >
                 <Radio value={true}>동의함</Radio>
                 <Radio value={false}>동의안함</Radio>
@@ -111,12 +209,14 @@ const InputJoinService = () => {
               <Radio.Group
                 name="personalApply"
                 defaultValue={false}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const today = new Date();
+                  const timestampToday = Timestamp.fromDate(today);
                   handleApplys({
                     personalValue: e.target.value,
-                    personalAt: getToday(),
-                  })
-                }
+                    personalAt: timestampToday,
+                  });
+                }}
               >
                 <Radio value={true}>동의함</Radio>
                 <Radio value={false}>동의안함</Radio>
@@ -174,16 +274,63 @@ const InputJoinService = () => {
                 onChange={(e) => handlePhoneNumber(e.target.value)}
               />
             </Form.Item>
-            <Form.Item
-              name="userBirth"
-              rules={[
-                {
-                  required: true,
-                  message: "생년월일을 입력해주세요",
-                },
-              ]}
-            >
-              <Input placeholder="생년월일(출생년도(4자리)-월(2자리)-일(2자리)" />
+
+            <Space>
+              <Form.Item
+                name="userJumin1"
+                rules={[
+                  {
+                    required: true,
+                    message: "주민등록번호를 입력해주세요",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="주민등록번호"
+                  maxLength={6}
+                  style={{ width: "120px" }}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="userJumin2"
+                rules={[
+                  {
+                    required: true,
+                    message: "주민등록번호를 입력해주세요",
+                  },
+                ]}
+              >
+                <Password maxLength={7} style={{ width: "120px" }} />
+              </Form.Item>
+            </Space>
+            <div className="flex">
+              <Form.Item
+                name="userZoneCode"
+                rules={[
+                  {
+                    required: true,
+                    message: "주소를 입력해주세요",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="우편번호"
+                  style={{ width: "80px" }}
+                  className=" placeholder:text-sm"
+                  readOnly
+                  onClick={() => handleClick()}
+                />
+              </Form.Item>
+              <Button onClick={() => handleClick()} type="primary">
+                검색
+              </Button>
+            </div>
+            <Form.Item name="userFullAddress">
+              <Input placeholder="주소" readOnly />
+            </Form.Item>
+            <Form.Item name="userExtraAddress">
+              <Input placeholder="상세주소" />
             </Form.Item>
             <Form.Item>
               <Space>
@@ -194,7 +341,7 @@ const InputJoinService = () => {
                     !applyState.uniqueValue || !applyState.personalValue
                   }
                 >
-                  전화상담요청
+                  가입신청
                 </Button>
                 <Button
                   htmlType="button"
@@ -209,6 +356,7 @@ const InputJoinService = () => {
           </Form>
         </div>
       </div>
+      {contextHolder}
     </div>
   );
 };

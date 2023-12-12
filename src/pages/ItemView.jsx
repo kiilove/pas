@@ -136,6 +136,24 @@ const ItemView = ({ propProductId }) => {
                       className="text-gray-600"
                       style={{ fontFamily: "Noto Sans KR", fontSize: "13px" }}
                     >
+                      판매사
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <span
+                      className="text-gray-600"
+                      style={{ fontFamily: "Noto Sans KR", fontSize: "13px" }}
+                    >
+                      프리드라이프
+                    </span>
+                  </div>
+                </div>
+                <div className="flex w-full h-7">
+                  <div className="flex" style={{ width: "100px" }}>
+                    <span
+                      className="text-gray-600"
+                      style={{ fontFamily: "Noto Sans KR", fontSize: "13px" }}
+                    >
                       계약구좌
                     </span>
                   </div>

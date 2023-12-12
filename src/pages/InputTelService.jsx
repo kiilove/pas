@@ -1,4 +1,4 @@
-import { Button, Form, Input, Radio, Space } from "antd";
+import { Button, Form, Input, Radio, Space, notification } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import UniqueIdApply from "../components/UniqueIdApply";
 import PersonalInfoApply from "../components/PersonalInfoApply";
@@ -8,8 +8,11 @@ import {
   formatPhoneNumber,
   getToday,
 } from "../functions";
+import { Timestamp } from "firebase/firestore";
+import { useFirestoreAddData } from "../hooks/useFirestore";
 
 const InputTelService = () => {
+  const [sellerId, setSellerId] = useState("jncore");
   const [form] = Form.useForm();
   const inputRef = useRef();
 
@@ -20,15 +23,37 @@ const InputTelService = () => {
     personalAt: undefined,
   });
 
+  const firestoreAdd = useFirestoreAddData();
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (apiType, title, message, placement, duration) => {
+    api[apiType]({
+      message: title,
+      description: message,
+      placement,
+      duration,
+    });
+  };
+
+  const handleAddJoin = async (data) => {
+    try {
+      await firestoreAdd.addData("userTelService", { ...data }, (data) => {
+        openNotification(
+          "success",
+          "접수되었습니다.",
+          "곧 담당자가 연락드리겠습니다."
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const onFinish = (values) => {
     //console.log(values);
     const encryptInfo = {
-      userName: encryptData(
-        inputRef?.current.getFieldsValue().userName,
-        process.env.REACT_APP_SECRET_KEY
-      ),
+      userName: encryptData(values.userName, process.env.REACT_APP_SECRET_KEY),
       userPhoneNumber: encryptData(
-        inputRef?.current.getFieldsValue().userPhoneNumber,
+        values.userPhoneNumber,
         process.env.REACT_APP_SECRET_KEY
       ),
     };
@@ -43,11 +68,9 @@ const InputTelService = () => {
         process.env.REACT_APP_SECRET_KEY
       ),
     };
-    console.log("암호화", encryptInfo);
-    console.log("복호화", decryptInfo);
-    const newInfo = { ...encryptInfo, ...applyState };
 
-    console.log(newInfo);
+    const newInfo = { ...encryptInfo, ...applyState, sellerId };
+    handleAddJoin(newInfo);
   };
   const onReset = () => {
     form.resetFields();
@@ -90,12 +113,14 @@ const InputTelService = () => {
               <Radio.Group
                 name="uniqueApply"
                 defaultValue={false}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const today = new Date();
+                  const timestampToday = Timestamp.fromDate(today);
                   handleApplys({
                     uniqueValue: e.target.value,
-                    uniqueAt: getToday(),
-                  })
-                }
+                    uniqueAt: timestampToday,
+                  });
+                }}
               >
                 <Radio value={true}>동의함</Radio>
                 <Radio value={false}>동의안함</Radio>
@@ -111,12 +136,14 @@ const InputTelService = () => {
               <Radio.Group
                 name="personalApply"
                 defaultValue={false}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const today = new Date();
+                  const timestampToday = Timestamp.fromDate(today);
                   handleApplys({
                     personalValue: e.target.value,
-                    personalAt: getToday(),
-                  })
-                }
+                    personalAt: timestampToday,
+                  });
+                }}
               >
                 <Radio value={true}>동의함</Radio>
                 <Radio value={false}>동의안함</Radio>
@@ -198,6 +225,7 @@ const InputTelService = () => {
           </Form>
         </div>
       </div>
+      {contextHolder}
     </div>
   );
 };
