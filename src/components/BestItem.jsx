@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoChevronForwardCircle } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useFirestoreQuery } from "../hooks/useFirestore";
+import { where } from "firebase/firestore";
 
 const items = [
   {
@@ -39,7 +41,62 @@ const titleInlineStyle = {
 };
 
 const BestItem = ({ productType }) => {
+  const [bestItemIds, setBestItemIds] = useState([]);
+  const [referrerIP, setReferrerIP] = useState("");
+  const bestItemQuery = useFirestoreQuery();
   const navigate = useNavigate();
+
+  const fetchedBestItemByCommon = async (itemVendor = "프리드라이프") => {
+    const commonQuery = [
+      where("ownerGrade", "==", "admin"),
+      where("itemVendor", "==", itemVendor),
+    ];
+
+    try {
+      await bestItemQuery.getDocuments(
+        "bestitems",
+        (data) => {
+          console.log(data);
+          if (data?.length > 0) {
+            setBestItemIds([...data[0].bestItemIds]);
+          }
+        },
+        commonQuery
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchedBestItemByToken = async (
+    sellerToken,
+    itemVendor = "프리드라이프"
+  ) => {
+    const tokenQuery = [
+      where("owner", "==", sellerToken),
+      where("itemVendor", "==", itemVendor),
+    ];
+
+    try {
+      await bestItemQuery.getDocuments(
+        "bestitems",
+        (data) => {
+          console.log(data);
+          if (data?.length > 0) {
+            setBestItemIds([...data[0].bestItemIds]);
+          }
+        },
+        tokenQuery
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(bestItemIds);
+  }, [bestItemIds]);
+
   return (
     <div className="flex flex-col w-full px-2">
       <div className="flex w-full justify-center flex-wrap gap-5">

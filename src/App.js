@@ -19,6 +19,7 @@ function App() {
       >
         <Routes>
           <Route path="/" element={<Main children={<Intro />} />} />
+          <Route path="/:sellerToken" element={<Main children={<Intro />} />} />
           <Route path="/test" element={<MainCarousel />} />
           <Route path="/itemview" element={<ItemView />} />
           <Route path="/telservice" element={<InputTelService />} />

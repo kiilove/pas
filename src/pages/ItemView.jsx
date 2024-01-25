@@ -86,7 +86,7 @@ const ItemView = ({ propProductId }) => {
         </Header>
         <Content className="bg-gray-100">
           <div className="flex w-full flex-col">
-            <div className="flex w-full bg-gray-200 justify-center items-center py-5 border-gray-400 border">
+            <div className="flex w-full bg-gray-100 justify-center items-center py-5 border-gray-400 border">
               <img
                 src={picUrl}
                 alt=""

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ContactIcon from "../img/contact_icon.png";
 import ReviewBanner from "../img/review_event.png";
 import { Avatar, Carousel, Space } from "antd";
@@ -6,10 +6,46 @@ import MainCarousel from "../components/MainCarousel";
 import MainBestItems from "../components/MainBestItems";
 
 import MainCategoryItems from "../components/MainCategoryItems";
+import { useParams } from "react-router-dom";
 
 const Intro = () => {
+  const [referrerIP, setReferrerIP] = useState("");
+  const [referrerData, setReferrerData] = useState();
+  const params = useParams();
+  async function getIPAddress() {
+    const response = await fetch("https://ipapi.co/json/");
+
+    const data = await response.json();
+    setReferrerData(data);
+    return data.ip;
+  }
+
+  function getReferrer() {
+    return document.referrer;
+  }
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
+
+  useEffect(() => {
+    async function fetchIPAndReferrer() {
+      try {
+        const ip = await getIPAddress(); // 비동기 함수의 결과를 기다림
+        console.log(ip);
+        setReferrerIP(ip); // 상태 업데이트
+        const referrer = getReferrer();
+        console.log(referrer);
+      } catch (error) {
+        console.error("Error fetching IP address: ", error);
+      }
+    }
+
+    fetchIPAndReferrer();
+  }, []);
   return (
     <div className="flex flex-col w-full h-full gap-y-0 ">
+      <div className="flex">{referrerData?.version}</div>
       <div className="flex w-full h-auto flex-col">
         <div className="flex h-28 bg-gray-200" style={{ width: "100%" }}>
           <div className="flex p-5 w-full">
