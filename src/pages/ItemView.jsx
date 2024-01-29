@@ -5,7 +5,9 @@ import { Divider, Tabs } from "antd";
 import ContactIcon from "../img/contact_icon.png";
 import AllHappyServiceInfo from "../components/AllHappyServiceInfo";
 import ProductInfo from "../components/ProductInfo";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import ProductDescription from "../components/ProductDescription";
+import "./ItemView.css";
 const items = [
   {
     key: "1",
@@ -39,15 +41,24 @@ const contentInlineStyle = {
 };
 
 const { makerName, productType, title, picUrl, accountCount } = items[0];
-const tabItems = [
-  { key: "1", label: "상조서비스 안내", children: <AllHappyServiceInfo /> },
-  { key: "2", label: "가전제품 안내", children: <ProductInfo /> },
-];
-const ItemView = ({ propProductId }) => {
-  const [scrolling, setScrolling] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  const navigate = useNavigate();
 
+const ItemView = () => {
+  const [scrolling, setScrolling] = useState(false);
+  const [currentItem, setCurrentItem] = useState({});
+  const [currentElectronic, setCurrentElectronic] = useState({});
+  const [descriptionsUrl, setDescriptionsUrl] = useState([]);
+  const [thumbnailsUrl, setThumbnailsUrl] = useState([]);
+  const [scrollY, setScrollY] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const tabItems = [
+    { key: "1", label: "상조서비스 안내", children: <AllHappyServiceInfo /> },
+    {
+      key: "2",
+      label: "가전제품 안내",
+      children: <ProductDescription descriptionUrls={descriptionsUrl} />,
+    },
+  ];
   useEffect(() => {
     let isScrollingTimeout; // 스크롤 이벤트 타임아웃 핸들러
 
@@ -75,6 +86,37 @@ const ItemView = ({ propProductId }) => {
     console.log(scrolling);
   }, [scrolling]);
 
+  useEffect(() => {
+    if (location?.state?.data) {
+      setCurrentItem({ ...location.state.data });
+      const flatDescription = location.state.data.productInfo
+        .map((product, pIdx) => {
+          return product.productDescription;
+        })
+        .flat();
+
+      if (flatDescription?.length > 0) {
+        const flatUrl = flatDescription.map((flat, fIdx) => {
+          return flat.url;
+        });
+        setDescriptionsUrl([...flatUrl]);
+      }
+
+      const flatThumbnail = location.state.data.productInfo
+        .map((product, pIdx) => {
+          return product.productThumbnail;
+        })
+        .flat();
+
+      if (flatThumbnail?.length > 0) {
+        const flatUrl = flatThumbnail.map((flat, fIdx) => {
+          return flat.url;
+        });
+        setThumbnailsUrl([...flatUrl]);
+      }
+    }
+  }, [location]);
+
   return (
     <div
       style={{ maxWidth: "1000px", minHeight: "100vh", width: "100%" }}
@@ -87,27 +129,45 @@ const ItemView = ({ propProductId }) => {
         <Content className="bg-gray-100">
           <div className="flex w-full flex-col">
             <div className="flex w-full bg-gray-100 justify-center items-center py-5 border-gray-400 border">
-              <img
-                src={picUrl}
-                alt=""
-                className=" object-center object-contain"
-                style={{ maxHeight: "200px" }}
-              />
+              {thumbnailsUrl.length === 1 && (
+                <img
+                  src={thumbnailsUrl[0]}
+                  alt=""
+                  className=" object-center object-contain product-thumbnail-image"
+                />
+              )}
+              <div className="flex flex-col md:flex-row w-full justify-center items-center gap-10">
+                {thumbnailsUrl.length > 1 &&
+                  thumbnailsUrl.map((thumb, tIdx) => {
+                    return (
+                      <img
+                        src={thumb}
+                        alt=""
+                        className=" object-center object-contain product-thumbnail-image"
+                      />
+                    );
+                  })}
+              </div>
             </div>
             <div
               className="flex w-full bg-white flex-col p-7 gap-y-1"
               style={{ height: "250px" }}
             >
               <div className="flex gap-x-2">
-                <span style={makerInlineStyle}>{makerName}</span> /
-                <span style={makerInlineStyle}>{productType}</span>
+                <span style={makerInlineStyle}>
+                  {location?.state?.data?.productInfo[0]?.productVendor}
+                </span>{" "}
+                /
+                <span style={makerInlineStyle}>
+                  {location?.state?.data?.productInfo[0]?.productVendor}
+                </span>
               </div>
               <div className="flex">
                 <span
                   style={titleInlineStyle}
-                  className=" font-bold text-gray-800"
+                  className=" text-sm md:font-bold text-gray-800"
                 >
-                  {title}
+                  {currentItem?.itemName}
                 </span>
               </div>
               <Divider />
@@ -162,7 +222,7 @@ const ItemView = ({ propProductId }) => {
                       className="text-gray-600"
                       style={{ fontFamily: "Noto Sans KR", fontSize: "13px" }}
                     >
-                      2구좌
+                      {currentItem?.accountCount}
                     </span>
                   </div>
                 </div>
@@ -272,6 +332,7 @@ const ItemView = ({ propProductId }) => {
               defaultActiveKey="1"
               items={tabItems}
               tabBarStyle={{ marginLeft: "20px" }}
+              className="w-full"
             />
           </div>
         </Content>

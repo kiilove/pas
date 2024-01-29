@@ -32,8 +32,7 @@ const Intro = () => {
     async function fetchIPAndReferrer() {
       try {
         const ip = await getIPAddress(); // 비동기 함수의 결과를 기다림
-        console.log(ip);
-        setReferrerIP(ip); // 상태 업데이트
+
         const referrer = getReferrer();
         console.log(referrer);
       } catch (error) {
@@ -45,7 +44,6 @@ const Intro = () => {
   }, []);
   return (
     <div className="flex flex-col w-full h-full gap-y-0 ">
-      <div className="flex">{referrerData?.version}</div>
       <div className="flex w-full h-auto flex-col">
         <div className="flex h-28 bg-gray-200" style={{ width: "100%" }}>
           <div className="flex p-5 w-full">
@@ -126,7 +124,7 @@ const Intro = () => {
         />
       </div>
       <div className="flex flex-col px-2 gap-y-2 mt-5">
-        <MainBestItems />
+        <MainBestItems sellerToken={params?.sellerToken} />
       </div>
       <div className="flex flex-col px-2 gap-y-2 mt-5">
         <MainCategoryItems />

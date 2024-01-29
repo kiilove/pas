@@ -1,0 +1,11 @@
+.product-thumbnail-image {
+  height: 200px; /* 모바일 화면에서는 가로를 꽉 차게 */
+}
+
+@media (max-width: 768px) {
+  .product-thumbnail-image {
+    max-width: 500px;
+    min-width: 300px;
+    max-height: 100px;
+  }
+}

@@ -40,102 +40,147 @@ const titleInlineStyle = {
   fontSize: "12px",
 };
 
-const BestItem = ({ productType }) => {
+const BestItem = ({ data = [] }) => {
   const [bestItemIds, setBestItemIds] = useState([]);
   const [referrerIP, setReferrerIP] = useState("");
   const bestItemQuery = useFirestoreQuery();
   const navigate = useNavigate();
 
-  const fetchedBestItemByCommon = async (itemVendor = "프리드라이프") => {
-    const commonQuery = [
-      where("ownerGrade", "==", "admin"),
-      where("itemVendor", "==", itemVendor),
-    ];
-
-    try {
-      await bestItemQuery.getDocuments(
-        "bestitems",
-        (data) => {
-          console.log(data);
-          if (data?.length > 0) {
-            setBestItemIds([...data[0].bestItemIds]);
-          }
-        },
-        commonQuery
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchedBestItemByToken = async (
-    sellerToken,
-    itemVendor = "프리드라이프"
-  ) => {
-    const tokenQuery = [
-      where("owner", "==", sellerToken),
-      where("itemVendor", "==", itemVendor),
-    ];
-
-    try {
-      await bestItemQuery.getDocuments(
-        "bestitems",
-        (data) => {
-          console.log(data);
-          if (data?.length > 0) {
-            setBestItemIds([...data[0].bestItemIds]);
-          }
-        },
-        tokenQuery
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    console.log(bestItemIds);
-  }, [bestItemIds]);
-
   return (
     <div className="flex flex-col w-full px-2">
-      <div className="flex w-full justify-center flex-wrap gap-5">
-        {items.map((item, iIdx) => {
-          const { shortTitle, picUrl } = item;
+      <div className="flex w-full justify-center flex-wrap gap-5 md:hidden">
+        {data.length > 0 &&
+          data.map((item, iIdx) => {
+            const { itemName, productInfo } = item;
+            const productThumbnail = productInfo
+              .map((product, pIdx) => {
+                // 예시: 각 product의 productThumbnail 배열에서 thumbnail을 반환
+                const thumbnails = product.productThumbnail.map(
+                  (thumbnail) => thumbnail
+                );
+                return thumbnails;
+              })
+              .flat(); // 모든 썸네일을 하나의 평탄한 배열로 만듦
 
-          return (
-            <div
-              className="bg-gray-200 rounded-lg flex flex-col hover:cursor-pointer"
-              style={{ width: "180px", height: "200px" }}
-              onClick={() => navigate("/itemview")}
-            >
+            console.log(productThumbnail);
+
+            return (
               <div
-                className="flex w-full justify-center items-center"
-                style={{ height: "150px" }}
+                className="bg-gray-200 rounded-lg flex  hover:cursor-pointer "
+                style={{ width: "100%", height: "200px" }}
+                onClick={() => navigate("/itemview", { state: { data: item } })}
               >
-                <img
-                  src={picUrl}
-                  alt=""
-                  className=" object-center object-contain"
-                  style={{ maxHeight: "100px" }}
-                />
-              </div>
-              <div className="flex px-4 justify-between items-center ">
-                <div className="flex h-full justify-start items-center">
-                  <span
-                    className="text-base font-semibold"
-                    style={titleInlineStyle}
-                  >
-                    {shortTitle}
-                  </span>
+                <div
+                  className="flex w-1/2 justify-center items-center "
+                  style={{ height: "180px" }}
+                >
+                  {productThumbnail?.length === 0 && null}
+                  {productThumbnail?.length === 1 && (
+                    <img
+                      src={productThumbnail[0]?.url}
+                      alt=""
+                      className=" object-center object-contain"
+                      style={{ maxHeight: "150px" }}
+                    />
+                  )}
+                  {productThumbnail?.length >= 2 &&
+                    productThumbnail.map((thumb, tIdx) => {
+                      const { url } = thumb;
+                      return (
+                        <div className="flex w-full h-full justify-center items-center">
+                          <div className="flex w-1/2 justify-center items-center">
+                            <img
+                              src={url}
+                              alt=""
+                              className=" object-center object-contain"
+                              style={{ maxHeight: "100px", width: "80px" }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
-                <div className="flex h-full justify-end items-center ">
-                  <IoChevronForwardCircle style={{ fontSize: "16px" }} />
+                <div className="flex px-4 justify-between items-center w-1/2">
+                  <div className="flex h-full justify-start items-center">
+                    <span
+                      className="text-base font-semibold"
+                      style={titleInlineStyle}
+                    >
+                      {itemName}
+                    </span>
+                  </div>
+                  <div className="flex h-full justify-end items-center ">
+                    <IoChevronForwardCircle style={{ fontSize: "16px" }} />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+      </div>
+      <div className="hidden w-full justify-center flex-wrap gap-5 md:flex">
+        {data.length > 0 &&
+          data.map((item, iIdx) => {
+            const { itemName, productInfo, id } = item;
+            const productThumbnail = productInfo
+              .map((product, pIdx) => {
+                // 예시: 각 product의 productThumbnail 배열에서 thumbnail을 반환
+                const thumbnails = product.productThumbnail.map(
+                  (thumbnail) => thumbnail
+                );
+                return thumbnails;
+              })
+              .flat(); // 모든 썸네일을 하나의 평탄한 배열로 만듦
+
+            return (
+              <div
+                className="bg-gray-200 rounded-lg flex flex-col hover:cursor-pointer "
+                style={{ width: "240px", height: "260px" }}
+                onClick={() => navigate("/itemview", { state: { data: item } })}
+              >
+                <div
+                  className="flex w-full justify-center items-center"
+                  style={{ height: "150px" }}
+                >
+                  {productThumbnail?.length === 0 && null}
+                  {productThumbnail?.length === 1 && (
+                    <img
+                      src={productThumbnail[0]?.url}
+                      alt=""
+                      className=" object-center object-contain"
+                      style={{ maxHeight: "100px" }}
+                    />
+                  )}
+                  {productThumbnail?.length >= 2 &&
+                    productThumbnail.map((thumb, tIdx) => {
+                      const { url } = thumb;
+                      return (
+                        <div className="flex w-full h-full px-1 justify-center items-center ">
+                          <img
+                            src={url}
+                            alt=""
+                            className=" object-center object-contain"
+                            style={{ maxHeight: "100px", width: "80px" }}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
+                <div className="flex px-4 justify-between items-center ">
+                  <div className="flex h-full justify-start items-center">
+                    <span
+                      className="text-base font-semibold"
+                      style={titleInlineStyle}
+                    >
+                      {itemName}
+                    </span>
+                  </div>
+                  <div className="flex h-full justify-end items-center ">
+                    <IoChevronForwardCircle style={{ fontSize: "16px" }} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
