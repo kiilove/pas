@@ -75,16 +75,13 @@ const ItemView = () => {
 
     // 스크롤 이벤트 핸들러를 추가합니다.
     window.addEventListener("scroll", handleScroll);
-
+    // 페이지 로드 시 스크롤 위치를 맨 위로 설정
+    window.scrollTo(0, 0);
     return () => {
       // 컴포넌트가 언마운트될 때 이벤트 핸들러를 제거합니다.
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  useEffect(() => {
-    console.log(scrolling);
-  }, [scrolling]);
 
   useEffect(() => {
     if (location?.state?.data) {
@@ -128,15 +125,16 @@ const ItemView = () => {
         </Header>
         <Content className="bg-gray-100">
           <div className="flex w-full flex-col">
-            <div className="flex w-full bg-gray-100 justify-center items-center py-5 border-gray-400 border">
-              {thumbnailsUrl.length === 1 && (
-                <img
-                  src={thumbnailsUrl[0]}
-                  alt=""
-                  className=" object-center object-contain product-thumbnail-image"
-                />
-              )}
+            <div className="flex w-full bg-gray-100 justify-center items-center py-5 border-gray-400 border ">
               <div className="flex flex-col md:flex-row w-full justify-center items-center gap-10">
+                {thumbnailsUrl.length === 1 && (
+                  <img
+                    src={thumbnailsUrl[0]}
+                    alt=""
+                    className=" object-center object-contain product-thumbnail-image"
+                  />
+                )}
+
                 {thumbnailsUrl.length > 1 &&
                   thumbnailsUrl.map((thumb, tIdx) => {
                     return (
@@ -159,7 +157,7 @@ const ItemView = () => {
                 </span>{" "}
                 /
                 <span style={makerInlineStyle}>
-                  {location?.state?.data?.productInfo[0]?.productVendor}
+                  {location?.state?.data?.productInfo[0]?.productType}
                 </span>
               </div>
               <div className="flex">
