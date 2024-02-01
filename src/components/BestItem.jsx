@@ -64,8 +64,12 @@ const BestItem = ({ data = [] }) => {
 
             return (
               <div
-                className="bg-gray-200 rounded-lg flex  hover:cursor-pointer "
-                style={{ width: "100%", height: "200px" }}
+                className=" rounded-lg flex  hover:cursor-pointer "
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  backgroundColor: "#ececec",
+                }}
                 onClick={() => navigate("/itemview", { state: { data: item } })}
               >
                 <div
@@ -78,7 +82,7 @@ const BestItem = ({ data = [] }) => {
                       src={productThumbnail[0]?.url}
                       alt=""
                       className=" object-center object-contain"
-                      style={{ maxHeight: "150px" }}
+                      style={{ maxHeight: "150px", maxWidth: "130px" }}
                     />
                   )}
                   {productThumbnail?.length >= 2 &&
@@ -131,8 +135,12 @@ const BestItem = ({ data = [] }) => {
 
             return (
               <div
-                className="bg-gray-200 rounded-lg flex flex-col hover:cursor-pointer "
-                style={{ width: "230px", height: "260px" }}
+                className=" rounded-lg flex flex-col hover:cursor-pointer "
+                style={{
+                  width: "230px",
+                  height: "260px",
+                  backgroundColor: "#ececec",
+                }}
                 onClick={() => navigate("/itemview", { state: { data: item } })}
               >
                 <div
@@ -145,7 +153,7 @@ const BestItem = ({ data = [] }) => {
                       src={productThumbnail[0]?.url}
                       alt=""
                       className=" object-center object-contain"
-                      style={{ maxHeight: "100px" }}
+                      style={{ maxHeight: "100px", maxWidth: "130px" }}
                     />
                   )}
                   {productThumbnail?.length >= 2 &&

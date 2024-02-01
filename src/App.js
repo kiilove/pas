@@ -6,6 +6,7 @@ import ItemView from "./pages/ItemView";
 import InputTelService from "./pages/InputTelService";
 import InputJoinService from "./pages/InputJoinService";
 import IntroV2 from "./pages/IntroV2";
+import ItemList from "./pages/ItemList";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/itemview" element={<ItemView />} />
           <Route path="/telservice" element={<InputTelService />} />
           <Route path="/joinservice" element={<InputJoinService />} />
+          <Route path="/itemlist" element={<ItemList />} />
         </Routes>
       </div>
     </BrowserRouter>
