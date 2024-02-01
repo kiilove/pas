@@ -107,7 +107,7 @@ const MainBestItems = ({ sellerToken }) => {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex w-full px-5 justify-start items-center h-10">
+      <div className="flex w-full justify-start items-center h-10 px-3">
         <span className={titleStyle} style={titleInlineStyle}>
           인기상품
         </span>

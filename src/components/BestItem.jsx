@@ -62,8 +62,6 @@ const BestItem = ({ data = [] }) => {
               })
               .flat(); // 모든 썸네일을 하나의 평탄한 배열로 만듦
 
-            console.log(productThumbnail);
-
             return (
               <div
                 className="bg-gray-200 rounded-lg flex  hover:cursor-pointer "
@@ -134,7 +132,7 @@ const BestItem = ({ data = [] }) => {
             return (
               <div
                 className="bg-gray-200 rounded-lg flex flex-col hover:cursor-pointer "
-                style={{ width: "240px", height: "260px" }}
+                style={{ width: "230px", height: "260px" }}
                 onClick={() => navigate("/itemview", { state: { data: item } })}
               >
                 <div

@@ -82,7 +82,23 @@ const Main = ({ children }) => {
         <Content className="bg-white h-auto" style={{ minHeight: "600px" }}>
           {children}
         </Content>
-        <Footer>footer</Footer>
+        <Footer>
+          <div className="flex w-full bg-gray-100 p-1">
+            <div className="flex w-full flex-col gap-y-1">
+              <li className="text-sm">
+                <span>해당 사이트는 제품정보를 참고용으로 제공합니다.</span>
+              </li>
+              <li className="text-sm">
+                <span>제조사 및 판매사 사정상 제품이 변경될 수 있습니다.</span>
+              </li>
+              <li className="text-sm">
+                <span>
+                  자세한 상담은 반드시 상담사를 통해 확인하실수 있습니다.
+                </span>
+              </li>
+            </div>
+          </div>
+        </Footer>
       </Layout>
     </div>
   );

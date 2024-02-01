@@ -5,6 +5,7 @@ import MainCarousel from "./components/MainCarousel";
 import ItemView from "./pages/ItemView";
 import InputTelService from "./pages/InputTelService";
 import InputJoinService from "./pages/InputJoinService";
+import IntroV2 from "./pages/IntroV2";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         }}
       >
         <Routes>
-          <Route path="/" element={<Main children={<Intro />} />} />
+          <Route path="/" element={<Main children={<IntroV2 />} />} />
           <Route path="/:sellerToken" element={<Main children={<Intro />} />} />
           <Route path="/test" element={<MainCarousel />} />
           <Route path="/itemview" element={<ItemView />} />
