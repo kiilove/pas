@@ -46,7 +46,7 @@ const IntroV2 = () => {
       </div>
       <div className="flex w-full h-auto flex-col gap-y-4 px-5">
         <div className="flex w-full flex-col">
-          <div className="flex w-full justify-start items-center h-10 px-3">
+          <div className="flex w-full justify-start items-center h-10 px-3 mt-3">
             <span className={titleStyle} style={titleInlineStyle}>
               테마별 상품
             </span>

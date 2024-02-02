@@ -2,6 +2,15 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import CryptoJS from "crypto-js";
 
+export const groupByKey = (list, key) => {
+  return list.reduce((acc, item) => {
+    if (!acc.some((accItem) => accItem.value === item[key])) {
+      acc.push({ value: item[key], label: item[key] });
+    }
+    return acc;
+  }, []);
+};
+
 export const encryptData = (data, secretKey) => {
   return CryptoJS.AES.encrypt(data, secretKey).toString();
 };

@@ -51,7 +51,7 @@ const BestItem = ({ data = [] }) => {
       <div className="flex w-full justify-center flex-wrap gap-5 md:hidden">
         {data.length > 0 &&
           data.map((item, iIdx) => {
-            const { itemName, productInfo } = item;
+            const { itemName, productInfo, accountCount } = item;
             const productThumbnail = productInfo
               .map((product, pIdx) => {
                 // 예시: 각 product의 productThumbnail 배열에서 thumbnail을 반환
@@ -103,17 +103,23 @@ const BestItem = ({ data = [] }) => {
                     })}
                 </div>
                 <div className="flex px-4 justify-between items-center w-1/2">
-                  <div className="flex h-full justify-start items-center">
+                  <div className="flex w-full flex-col justify-center h-full">
                     <span
                       className="text-base font-semibold"
                       style={titleInlineStyle}
                     >
                       {itemName}
                     </span>
+                    <div className="flex my-2 w-full h-7 justify-center items-center bg-gray-300 rounded-lg">
+                      <span
+                        className="text-base font-semibold"
+                        style={titleInlineStyle}
+                      >
+                        {accountCount}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex h-full justify-end items-center ">
-                    <IoChevronForwardCircle style={{ fontSize: "16px" }} />
-                  </div>
+                  <div className="flex h-full justify-end items-center "></div>
                 </div>
               </div>
             );
@@ -122,7 +128,7 @@ const BestItem = ({ data = [] }) => {
       <div className="hidden w-full justify-center flex-wrap gap-5 md:flex">
         {data.length > 0 &&
           data.map((item, iIdx) => {
-            const { itemName, productInfo, id } = item;
+            const { itemName, productInfo, id, accountCount } = item;
             const productThumbnail = productInfo
               .map((product, pIdx) => {
                 // 예시: 각 product의 productThumbnail 배열에서 thumbnail을 반환
@@ -144,7 +150,7 @@ const BestItem = ({ data = [] }) => {
                 onClick={() => navigate("/itemview", { state: { data: item } })}
               >
                 <div
-                  className="flex w-full justify-center items-center"
+                  className="flex w-full justify-center items-center pt-3"
                   style={{ height: "150px" }}
                 >
                   {productThumbnail?.length === 0 && null}
@@ -171,17 +177,22 @@ const BestItem = ({ data = [] }) => {
                       );
                     })}
                 </div>
-                <div className="flex px-4 justify-between items-center ">
-                  <div className="flex h-full justify-start items-center">
+                <div className="flex w-full h-1/2 px-4 justify-between items-center">
+                  <div className="flex w-full flex-col justify-between h-full">
                     <span
                       className="text-base font-semibold"
                       style={titleInlineStyle}
                     >
                       {itemName}
                     </span>
-                  </div>
-                  <div className="flex h-full justify-end items-center ">
-                    <IoChevronForwardCircle style={{ fontSize: "16px" }} />
+                    <div className="flex my-2 w-full h-7 justify-center items-center bg-gray-300 rounded-lg">
+                      <span
+                        className="text-base font-semibold"
+                        style={titleInlineStyle}
+                      >
+                        {accountCount}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

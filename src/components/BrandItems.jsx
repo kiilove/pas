@@ -33,6 +33,10 @@ const BrandItems = () => {
         console.log(error);
       }
     }
+
+    if (type === "all") {
+      navigate("/itemlist", { state: { all: true } });
+    }
   };
   return (
     <div className="flex w-full flex-wrap justify-around gap-2">
