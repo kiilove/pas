@@ -76,9 +76,7 @@ const Main = ({ children }) => {
             </div>
           </div>
         </Header> */}
-        <Header className="bg-white h-10">
-          <MainHeader />
-        </Header>
+
         <Content className="bg-white h-auto" style={{ minHeight: "600px" }}>
           {children}
         </Content>

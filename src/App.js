@@ -7,6 +7,7 @@ import InputTelService from "./pages/InputTelService";
 import InputJoinService from "./pages/InputJoinService";
 import IntroV2 from "./pages/IntroV2";
 import ItemList from "./pages/ItemList";
+import SangjoInfo from "./pages/SangjoInfo";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main children={<IntroV2 />} />} />
           <Route path="/:sellerToken" element={<Main children={<Intro />} />} />
-          <Route path="/test" element={<MainCarousel />} />
+          <Route path="/test" element={<SangjoInfo />} />
           <Route path="/itemview" element={<ItemView />} />
           <Route path="/telservice" element={<InputTelService />} />
           <Route path="/joinservice" element={<InputJoinService />} />

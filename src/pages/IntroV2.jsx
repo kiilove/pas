@@ -2,11 +2,12 @@ import React from "react";
 import SectorItems from "../components/SectorItems";
 import BrandItems from "../components/BrandItems";
 import { useParams } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import MainBestItems from "../components/MainBestItems";
 import ContactIcon from "../img/contact_icon.png";
-import ReviewBanner from "../img/review_event.png";
-import { useFirestoreQuery } from "../hooks/useFirestore";
-import { where } from "firebase/firestore";
+
+import MainCarousel from "../components/MainCarousel";
+import { carouselItemsMobile, carouselItemsPC } from "../CarouselInfo";
 const titleStyle = "text-gray-800 text-base font-extrabold";
 const titleInlineStyle = {
   fontFamily: "Noto Sans KR",
@@ -15,9 +16,13 @@ const titleInlineStyle = {
 };
 const IntroV2 = () => {
   const params = useParams();
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1224px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+  const carouselData = isMobile ? carouselItemsMobile : carouselItemsPC;
 
   return (
     <div className="flex flex-col w-full h-full gap-y-0 mb-5">
+      <MainCarousel data={carouselData} />
       <div
         style={{ height: "60px", width: "100%", backgroundColor: "#1e948e" }}
         className="flex justify-center items-center gap-x-5"
